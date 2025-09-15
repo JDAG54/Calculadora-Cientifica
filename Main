@@ -1,0 +1,153 @@
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        ScientificCalculator calc = new ScientificCalculator();
+        Scanner sc = new Scanner(System.in);
+        System.out.println("=== Calculadora Científica (Java) ===");
+        System.out.println("Modo ángulo inicial: " + (calc.isDegreesMode() ? "GRADOS" : "RADIANES"));
+        System.out.println("Escribe 'menu' para ver opciones, 'salir' para terminar.\n");
+
+        while (true) {
+            System.out.print("> ");
+            String cmd = sc.nextLine().trim().toLowerCase();
+
+            if (cmd.equals("salir") || cmd.equals("exit")) {
+                System.out.println("¡Hasta luego!");
+                break;
+            }
+            if (cmd.equals("menu") || cmd.equals("help") || cmd.equals("?")) {
+                printMenu(calc);
+                continue;
+            }
+            if (cmd.equals("modo")) {
+                calc.toggleAngleMode();
+                System.out.println("Modo ángulo: " + (calc.isDegreesMode() ? "GRADOS" : "RADIANES"));
+                continue;
+            }
+            if (cmd.equals("hist")) {
+                calc.printHistory();
+                continue;
+            }
+            if (cmd.equals("limpiar")) {
+                calc.clearHistory();
+                System.out.println("Histórico limpiado.");
+                continue;
+            }
+
+            try {
+                switch (cmd) {
+                    // Operaciones binarias
+                    case "suma":
+                    case "+":
+                        double[] ab1 = promptTwo(sc);
+                        double r1 = calc.add(ab1[0], ab1[1]);
+                        System.out.println("= " + r1);
+                        break;
+                    case "resta":
+                    case "-":
+                        double[] ab2 = promptTwo(sc);
+                        double r2 = calc.sub(ab2[0], ab2[1]);
+                        System.out.println("= " + r2);
+                        break;
+                    case "mul":
+                    case "x":
+                    case "*":
+                        double[] ab3 = promptTwo(sc);
+                        double r3 = calc.mul(ab3[0], ab3[1]);
+                        System.out.println("= " + r3);
+                        break;
+                    case "div":
+                    case "/":
+                        double[] ab4 = promptTwo(sc);
+                        double r4 = calc.div(ab4[0], ab4[1]);
+                        System.out.println("= " + r4);
+                        break;
+                    case "pow":
+                    case "^":
+                        double[] ab5 = promptTwo(sc);
+                        double r5 = calc.pow(ab5[0], ab5[1]);
+                        System.out.println("= " + r5);
+                        break;
+
+                    // Operaciones unarias
+                    case "sqrt":
+                        double a1 = promptOne(sc);
+                        System.out.println("= " + calc.sqrt(a1));
+                        break;
+                    case "abs":
+                        double a2 = promptOne(sc);
+                        System.out.println("= " + calc.abs(a2));
+                        break;
+                    case "exp":
+                        double a3 = promptOne(sc);
+                        System.out.println("= " + calc.exp(a3));
+                        break;
+                    case "ln":
+                        double a4 = promptOne(sc);
+                        System.out.println("= " + calc.ln(a4));
+                        break;
+                    case "log10":
+                        double a5 = promptOne(sc);
+                        System.out.println("= " + calc.log10(a5));
+                        break;
+                    case "fact":
+                    case "!":
+                        long n = promptLong(sc);
+                        System.out.println("= " + calc.factorial(n));
+                        break;
+
+                    // Trigonométricas (usan modo grados/radianes)
+                    case "sin":
+                        double t1 = promptOne(sc);
+                        System.out.println("= " + calc.sin(t1));
+                        break;
+                    case "cos":
+                        double t2 = promptOne(sc);
+                        System.out.println("= " + calc.cos(t2));
+                        break;
+                    case "tan":
+                        double t3 = promptOne(sc);
+                        System.out.println("= " + calc.tan(t3));
+                        break;
+
+                    default:
+                        System.out.println("Comando no reconocido. Escribe 'menu' para ver opciones.");
+                }
+            } catch (IllegalArgumentException ex) {
+                System.out.println("Error: " + ex.getMessage());
+            } catch (Exception ex) {
+                System.out.println("Error inesperado: " + ex.getMessage());
+            }
+        }
+        sc.close();
+    }
+
+    private static void printMenu(ScientificCalculator calc) {
+        System.out.println("\n--- MENÚ ---");
+        System.out.println("Binarias: suma(+), resta(-), mul(*), div(/), pow(^)");
+        System.out.println("Unarias:  sqrt, abs, exp, ln, log10, fact(!)");
+        System.out.println("Trig:     sin, cos, tan  (modo actual: " + (calc.isDegreesMode() ? "GRADOS" : "RADIANES") + ")");
+        System.out.println("Otros:    modo (cambiar grados/radianes), hist (ver histórico), limpiar (borrar histórico)");
+        System.out.println("Ayuda:    menu | help | ?");
+        System.out.println("Salir:    salir | exit\n");
+    }
+
+    private static double[] promptTwo(Scanner sc) {
+        System.out.print("a = ");
+        double a = Double.parseDouble(sc.nextLine().trim());
+        System.out.print("b = ");
+        double b = Double.parseDouble(sc.nextLine().trim());
+        return new double[]{a, b};
+    }
+
+    private static double promptOne(Scanner sc) {
+        System.out.print("x = ");
+        return Double.parseDouble(sc.nextLine().trim());
+    }
+
+    private static long promptLong(Scanner sc) {
+        System.out.print("n (entero >= 0, <= 20 recomendado) = ");
+        return Long.parseLong(sc.nextLine().trim());
+    }
+}
