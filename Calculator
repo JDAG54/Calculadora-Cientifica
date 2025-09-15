@@ -1,0 +1,134 @@
+import java.util.ArrayList;
+import java.util.List;
+
+public class ScientificCalculator {
+    private boolean degreesMode = true; // true = grados, false = radianes
+    private final List<String> history = new ArrayList<>();
+
+    public boolean isDegreesMode() {
+        return degreesMode;
+    }
+
+    public void toggleAngleMode() {
+        degreesMode = !degreesMode;
+        addHistory("Modo -> " + (degreesMode ? "GRADOS" : "RADIANES"));
+    }
+
+    private double toRadiansIfNeeded(double x) {
+        return degreesMode ? Math.toRadians(x) : x;
+    }
+
+    private void addHistory(String entry) {
+        if (history.size() > 100) history.remove(0);
+        history.add(entry);
+    }
+
+    public void printHistory() {
+        if (history.isEmpty()) {
+            System.out.println("(histórico vacío)");
+            return;
+        }
+        System.out.println("--- Histórico ---");
+        for (String h : history) System.out.println(h);
+    }
+
+    public void clearHistory() {
+        history.clear();
+    }
+
+    // Binarias
+    public double add(double a, double b) {
+        double r = a + b;
+        addHistory(a + " + " + b + " = " + r);
+        return r;
+    }
+
+    public double sub(double a, double b) {
+        double r = a - b;
+        addHistory(a + " - " + b + " = " + r);
+        return r;
+    }
+
+    public double mul(double a, double b) {
+        double r = a * b;
+        addHistory(a + " * " + b + " = " + r);
+        return r;
+    }
+
+    public double div(double a, double b) {
+        if (b == 0.0) throw new IllegalArgumentException("División por cero");
+        double r = a / b;
+        addHistory(a + " / " + b + " = " + r);
+        return r;
+    }
+
+    public double pow(double a, double b) {
+        double r = Math.pow(a, b);
+        addHistory(a + " ^ " + b + " = " + r);
+        return r;
+    }
+
+    // Unarias
+    public double sqrt(double x) {
+        if (x < 0) throw new IllegalArgumentException("Raíz de número negativo");
+        double r = Math.sqrt(x);
+        addHistory("sqrt(" + x + ") = " + r);
+        return r;
+    }
+
+    public double abs(double x) {
+        double r = Math.abs(x);
+        addHistory("abs(" + x + ") = " + r);
+        return r;
+    }
+
+    public double exp(double x) {
+        double r = Math.exp(x);
+        addHistory("exp(" + x + ") = " + r);
+        return r;
+    }
+
+    public double ln(double x) {
+        if (x <= 0) throw new IllegalArgumentException("ln definido para x > 0");
+        double r = Math.log(x);
+        addHistory("ln(" + x + ") = " + r);
+        return r;
+    }
+
+    public double log10(double x) {
+        if (x <= 0) throw new IllegalArgumentException("log10 definido para x > 0");
+        double r = Math.log10(x);
+        addHistory("log10(" + x + ") = " + r);
+        return r;
+    }
+
+    public long factorial(long n) {
+        if (n < 0) throw new IllegalArgumentException("n debe ser >= 0");
+        if (n > 20) throw new IllegalArgumentException("n demasiado grande (usa <= 20 para evitar overflow de long)");
+        long r = MathUtils.factorialLong(n);
+        addHistory(n + "! = " + r);
+        return r;
+    }
+
+    // Trigonométricas (respetan modo ángulo)
+    public double sin(double x) {
+        double arg = toRadiansIfNeeded(x);
+        double r = Math.sin(arg);
+        addHistory("sin(" + x + (degreesMode ? "°" : " rad") + ") = " + r);
+        return r;
+    }
+
+    public double cos(double x) {
+        double arg = toRadiansIfNeeded(x);
+        double r = Math.cos(arg);
+        addHistory("cos(" + x + (degreesMode ? "°" : " rad") + ") = " + r);
+        return r;
+    }
+
+    public double tan(double x) {
+        double arg = toRadiansIfNeeded(x);
+        double r = Math.tan(arg);
+        addHistory("tan(" + x + (degreesMode ? "°" : " rad") + ") = " + r);
+        return r;
+    }
+}
